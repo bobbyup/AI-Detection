@@ -23,9 +23,17 @@ class Corpus:
     def __init__(self, name, data_dir='data', skip_train=False):
         download(name, data_dir=data_dir)
         self.name = name
-        self.train = load_texts(f'{data_dir}/{name}.train.jsonl', expected_size=250000) if not skip_train else None
-        self.test = load_texts(f'{data_dir}/{name}.test.jsonl', expected_size=5000)
-        self.valid = load_texts(f'{data_dir}/{name}.valid.jsonl', expected_size=5000)
+        if name == "combined":
+            expected_train = 251499
+            expected_test = 5250
+            expected_valid = 5259
+        else:
+            expected_train = 250000
+            expected_test = 5000
+            expected_valid = 5000
+        self.train = load_texts(f'{data_dir}/{name}.train.jsonl', expected_size=expected_train) if not skip_train else None
+        self.test = load_texts(f'{data_dir}/{name}.test.jsonl', expected_size=expected_test)
+        self.valid = load_texts(f'{data_dir}/{name}.valid.jsonl', expected_size=expected_valid)
 
 
 class EncodedDataset(Dataset):

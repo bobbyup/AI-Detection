@@ -12,7 +12,7 @@ ALL_DATASETS = [
     'medium-345M', 'medium-345M-k40', 'medium-345M-nucleus',
     'large-762M',  'large-762M-k40',  'large-762M-nucleus',
     'xl-1542M',    'xl-1542M-k40',    'xl-1542M-nucleus',
-    'gpt3'
+    'gpt3', 'combined'
 ]
 
 
