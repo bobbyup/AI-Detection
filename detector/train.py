@@ -100,13 +100,14 @@ def train(model: nn.Module, optimizer, device: str, loader: DataLoader, desc='Tr
 
     with tqdm(loader, desc=desc, disable=distributed() and dist.get_rank() > 0) as loop:
         for texts, masks, labels in loop:
-
             texts, masks, labels = texts.to(device), masks.to(device), labels.to(device)
             batch_size = texts.shape[0]
-
             optimizer.zero_grad()
-            loss, logits = model(texts, attention_mask=masks, labels=labels)
+            
+            output = model(texts, attention_mask=masks, labels=labels)
+            loss, logits = output[:2]
             loss.backward()
+
             optimizer.step()
 
             batch_accuracy = accuracy_sum(logits, labels)
@@ -143,7 +144,9 @@ def validate(model: nn.Module, device: str, loader: DataLoader, votes=1, desc='V
                 texts, masks, labels = texts.to(device), masks.to(device), labels.to(device)
                 batch_size = texts.shape[0]
 
-                loss, logits = model(texts, attention_mask=masks, labels=labels)
+                output = model(texts, attention_mask=masks, labels=labels)
+                loss, logits = output[:2]
+
                 losses.append(loss)
                 logit_votes.append(logits)
 
@@ -205,7 +208,6 @@ def run(max_epochs=None,
     tokenization_utils.logger.setLevel('ERROR')
     tokenizer = RobertaTokenizer.from_pretrained(model_name)
     model = RobertaForSequenceClassification.from_pretrained(model_name).to(device)
-
     if rank == 0:
         summary(model)
         if distributed():

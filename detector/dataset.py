@@ -15,7 +15,7 @@ def load_texts(data_file, expected_size=None):
 
     for line in tqdm(open(data_file), total=expected_size, desc=f'Loading {data_file}'):
         texts.append(json.loads(line)['text'])
-
+    print("load texts")
     return texts
 
 
@@ -48,7 +48,6 @@ class EncodedDataset(Dataset):
         if self.epoch_size is not None:
             label = self.random.randint(2)
             texts = [self.fake_texts, self.real_texts][label]
-            text = texts[self.random.randint(len(texts))]
         else:
             if index < len(self.real_texts):
                 text = self.real_texts[index]
@@ -58,7 +57,6 @@ class EncodedDataset(Dataset):
                 label = 0
 
         tokens = self.tokenizer.encode(text)
-
         if self.max_sequence_length is None:
             tokens = tokens[:self.tokenizer.max_len - 2]
         else:
