@@ -50,7 +50,6 @@ def load_datasets(data_dir, real_dataset, fake_dataset, tokenizer, batch_size,
         download(real_dataset, fake_dataset, data_dir=data_dir)
 
     real_corpus = Corpus(real_dataset, data_dir=data_dir)
-
     if fake_dataset == "TWO":
         real_train, real_valid = real_corpus.train * 2, real_corpus.valid * 2
         fake_corpora = [Corpus(name, data_dir=data_dir) for name in ['xl-1542M', 'xl-1542M-nucleus']]
